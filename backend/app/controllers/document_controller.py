@@ -1,20 +1,32 @@
+import os
 from flask import jsonify, request
-from backend.app.repositories.document_repository import DocumentRepository
+from app.repositories.document_repository import DocumentRepository
 from app.models.document import Document
 from app import db
+
+UPLOAD_FOLDER = 'uploads/'
 
 class DocumentController:
     def __init__(self):
         self.document_repo = DocumentRepository()
 
     def create_document(self):
-        data = request.get_json()
+        if 'file' not in request.files:
+            return jsonify({"error": "Nenhum arquivo enviado"}), 400
+        
+        data = request.form
+        file = request.files['file']
 
         name = data.get("name")
         description = data.get("description")
+        _, extension = os.path.splitext(file.filename)
+        filename = f"{name.replace(' ', '_')}{extension}"
+        path = os.path.join(UPLOAD_FOLDER, filename)
         folder_id = data.get("folder_id")
 
-        new_document = Document(name = name, description = description, folder_id = folder_id)
+        file.save(path)
+
+        new_document = Document(name = name, description = description, folder_id = folder_id, path = path)
 
         self.document_repo.add(new_document)
 
