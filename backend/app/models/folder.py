@@ -9,5 +9,12 @@ class Folder(db.Model):
 
     documentos = db.relationship('Document', backref = 'Folder', lazy=True)
 
+    def to_dict(self):
+        return{
+            "id": self.id,
+            "name": self.name,
+            "description": self.description
+        }
+
 def __repr__(self):
         return f'<Folder {self.name}>'
