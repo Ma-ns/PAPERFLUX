@@ -8,9 +8,24 @@ class Document(db.Model):
     description = db.Column(db.Text, nullable=True)
     path = db.Column(db.String(200), nullable=True)
     extracted_data = db.Column(db.JSON, nullable=True)
+    modified_data = db.Column(db.JSON, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modified_at = db.Column(db.DateTime, nullable=True)
     
     folder_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_folder.id'), nullable=True)
+
+    def to_dict(self):
+        return{
+            "document_id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "path": self.path,
+            "extracted_data": self.extracted_data,
+            "modified_data": self.modified_data,
+            "created_at": self.created_at,
+            "modified_at": self.modified_at,
+            "folder_id": self.folder_id
+        }
 
 def __repr__(self):
         return f'<Document {self.name}>'

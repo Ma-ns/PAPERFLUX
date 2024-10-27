@@ -1,14 +1,12 @@
 import os
 from flask import jsonify, request
-from app.repositories.document_repository import DocumentRepository
-from app.models.document import Document
-from app import db
+from app.services.document_service import DocumentService
 
 UPLOAD_FOLDER = 'uploads/'
 
 class DocumentController:
     def __init__(self):
-        self.document_repo = DocumentRepository()
+        self.document_service = DocumentService()
 
     def create_document(self):
         if 'file' not in request.files:
@@ -19,6 +17,10 @@ class DocumentController:
 
         name = data.get("name")
         description = data.get("description")
+
+        if not name:
+            return jsonify({"erro": "O nome é obrigatório!"}), 400
+        
         _, extension = os.path.splitext(file.filename)
         filename = f"{name.replace(' ', '_')}{extension}"
         path = os.path.join(UPLOAD_FOLDER, filename)
@@ -26,25 +28,18 @@ class DocumentController:
 
         file.save(path)
 
-        new_document = Document(name = name, description = description, folder_id = folder_id, path = path)
+        new_document = self.document_service.create_document(name, description, folder_id, path)
 
-        self.document_repo.add(new_document)
-
-        return jsonify({"message": "Documento criado com sucesso!"}), 201
+        return jsonify({
+            "message": "Documento criado com sucesso!",
+            "document": new_document.to_dict()
+            }), 201
 
     def get_document(self, document_id):
-        document = self.document_repo.get(document_id)
+        document = self.document_service.get(document_id)
 
         if document:
-            return jsonify({
-                "id": document.id,
-                "name": document.name,
-                "description": document.description,
-                "path": document.path,
-                "extracted_data": document.extracted_data,
-                "created_at": document.created_at,
-                "folder_id": document.folder_id
-            })
+            return jsonify(document.to_dict())
         
         return jsonify({"message": "Documento não encontrado."}), 404
 
@@ -56,22 +51,24 @@ class DocumentController:
         
         data = request.get_json()
 
-        document.name = data.get("name", document.name)
-        document.description = data.get("description", document.description)
-        document.path = data.get("path", document.path)
-        document.extracted_data = data.get("extracted_data", document.extracted_data)
-        document.folder_id = data.get("folder_id", document.folder_id)
+        name = data.get("name", name)
+        description = data.get("description", description)
+        path = data.get("path", path)
+        extracted_data = data.get("extracted_data", extracted_data)
+        folder_id = data.get("folder_id", folder_id)
 
-        self.document_repo.update()
+        updated_document = self.document_service.update_document(name, description, path, extracted_data, folder_id)
 
-        return jsonify({"message": "Pasta atualizada com sucesso"}), 200
+        if updated_document:
+            return jsonify({
+                "message": "Pasta atualizada com sucesso",
+                "updated_document": updated_document.to_dict()
+                }), 200
+        return jsonify({"error": "O documento não pode ser atualizado"}), 404
 
     def delete_document(self, document_id):
-        document = self.document_repo.get(document_id)
+        response = self.document_service.delete_document(document_id)
 
-        if not document:
-            return jsonify({"message": "Documento não encontrado"}), 404
-        
-        self.document_repo.delete(document)
-
-        return jsonify({"message": "Documento excluído com sucesso"}), 200
+        if response:
+            return jsonify({"message": "Documento excluído com sucesso"}), 200
+        return jsonify({"message": "Documento não encontrado"}), 404
