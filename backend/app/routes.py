@@ -10,6 +10,7 @@ routes = Blueprint('routes', __name__)
 # Rotas para Pasta
 routes.route('/folder', methods=['POST'])(folder_controller.create_folder)
 routes.route('/folder/<int:folder_id>', methods=['GET'])(folder_controller.get_folder)
+routes.route('/folder/<int:folder_id>/documents', methods=['GET'])(folder_controller.get_all_documents)
 routes.route('/folder/<int:folder_id>', methods=['PUT'])(folder_controller.update_folder)
 routes.route('/folder/<int:folder_id>', methods=['DELETE'])(folder_controller.delete_folder)
 

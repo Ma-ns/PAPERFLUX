@@ -39,3 +39,6 @@ class FolderService:
             return True
         
         return False
+    
+    def get_all_documents(self, folder_id):
+        return self.folder_repo.get_all_documents(folder_id)

@@ -55,3 +55,10 @@ class FolderController:
         if response:
             return jsonify({"message": "Pasta excluída com sucesso"}), 200
         return jsonify({"message": "Pasta não encontrada"}), 404
+
+    def get_all_documents(self, folder_id):
+        documents = self.folder_service.get_all_documents(folder_id)
+
+        documents_data = [doc.to_dict() for doc in documents]
+
+        return jsonify({"documents": documents_data}),200
