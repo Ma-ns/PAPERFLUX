@@ -1,7 +1,6 @@
-import os
-import hashlib
 from datetime import datetime, timezone
 from app.repositories.document_repository import DocumentRepository
+from .file_service import FileService
 from app.models.document import Document
 from app import db
 
@@ -10,33 +9,15 @@ UPLOAD_FOLDER = 'uploads/'
 class DocumentService:
     def __init__(self):
         self.document_repo = DocumentRepository()
-
-    def upload_file(self, file, name):
-        _, extension = os.path.splitext(file.filename)
-        salt = os.urandom(16)
-        filename_hash = hashlib.sha256(salt + name.replace(' ', '_').encode()).hexdigest()
-        filename = f"{filename_hash}{extension}"
-        path = os.path.join(UPLOAD_FOLDER, filename)
-
-        file.save(path)
-
-        return path
-    
-    def update_file(self, file, name, path):
-        os.remove(path)
-
-        _, extension = os.path.splitext(file.filename)
-        salt = os.urandom(16)
-        filename_hash = hashlib.sha256(salt + name.replace(' ', '_').encode()).hexdigest()
-        filename = f"{filename_hash}{extension}"
-        path = os.path.join(UPLOAD_FOLDER, filename)
-
-        file.save(path)
-
-        return path
+        self.file_service = FileService()
 
     def create_document(self, name, description,extension, folder_id, path):
-        new_document = Document(name = name, description = description, extension = extension, folder_id = folder_id, path = path)
+        new_document = Document(
+            name = name, 
+            description = description, 
+            extension = extension, 
+            folder_id = folder_id, 
+            path = path)
 
         self.document_repo.add(new_document)
 
@@ -71,7 +52,7 @@ class DocumentService:
             document.description = description
             modified = True
         if file: 
-            document.path = self.update_file(file, document.name, document.path)
+            document.path = self.file_service.update_file(file, document.name, document.path, UPLOAD_FOLDER)
             document.extension = extension
             document.extracted_data = None
             document.modified_data = None
