@@ -1,8 +1,9 @@
 import os
+import hashlib
+from datetime import datetime, timezone
 from app.repositories.document_repository import DocumentRepository
 from app.models.document import Document
 from app import db
-from datetime import datetime, timezone
 
 UPLOAD_FOLDER = 'uploads/'
 
@@ -12,7 +13,9 @@ class DocumentService:
 
     def upload_file(self, file, name):
         _, extension = os.path.splitext(file.filename)
-        filename = f"{name.replace(' ', '_')}{extension}"
+        salt = os.urandom(16)
+        filename_hash = hashlib.sha256(salt + name.replace(' ', '_').encode()).hexdigest()
+        filename = f"{filename_hash}{extension}"
         path = os.path.join(UPLOAD_FOLDER, filename)
 
         file.save(path)
@@ -23,15 +26,17 @@ class DocumentService:
         os.remove(path)
 
         _, extension = os.path.splitext(file.filename)
-        filename = f"{name.replace(' ', '_')}{extension}"
+        salt = os.urandom(16)
+        filename_hash = hashlib.sha256(salt + name.replace(' ', '_').encode()).hexdigest()
+        filename = f"{filename_hash}{extension}"
         path = os.path.join(UPLOAD_FOLDER, filename)
 
         file.save(path)
 
         return path
 
-    def create_document(self, name, description, folder_id, path):
-        new_document = Document(name = name, description = description, folder_id = folder_id, path = path)
+    def create_document(self, name, description,extension, folder_id, path):
+        new_document = Document(name = name, description = description, extension = extension, folder_id = folder_id, path = path)
 
         self.document_repo.add(new_document)
 
@@ -45,6 +50,7 @@ class DocumentService:
             document_id, 
             name = None, 
             description = None,
+            extension = None,
             extracted_data = None,
             modified_data = None,
             folder_id = None,
@@ -66,9 +72,10 @@ class DocumentService:
             modified = True
         if file: 
             document.path = self.update_file(file, document.name, document.path)
+            document.extension = extension
             document.extracted_data = None
             document.modified_data = None
-            
+
             modified = True
         if extracted_data and not document.extracted_data:
             document.extracted_data = extracted_data

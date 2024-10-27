@@ -6,6 +6,7 @@ class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
+    extension = db.Column(db.String(50), nullable=False)
     path = db.Column(db.String(200), nullable=True)
     extracted_data = db.Column(db.JSON, nullable=True)
     modified_data = db.Column(db.JSON, nullable=True)
@@ -19,6 +20,7 @@ class Document(db.Model):
             "document_id": self.id,
             "name": self.name,
             "description": self.description,
+            "extension": self.extension,
             "path": self.path,
             "extracted_data": self.extracted_data,
             "modified_data": self.modified_data,
