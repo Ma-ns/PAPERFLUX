@@ -1,10 +1,14 @@
 import os
 from flask import jsonify, request
 from app.services.document_service import DocumentService
+from app.services.file_service import FileService
+
+UPLOAD_FOLDER = 'uploads/'
 
 class DocumentController:
     def __init__(self):
         self.document_service = DocumentService()
+        self.file_service = FileService()
 
     def create_document(self):
         if 'file' not in request.files:
@@ -17,7 +21,7 @@ class DocumentController:
         name = data.get("name")
         description = data.get("description")
         extension = extension
-        path = self.document_service.upload_file(file, name)
+        path = self.file_service.upload_file(file, name, UPLOAD_FOLDER)
         folder_id = data.get("folder_id")
 
         if not name:
