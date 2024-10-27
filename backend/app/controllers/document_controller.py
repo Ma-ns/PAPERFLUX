@@ -1,8 +1,5 @@
-import os
 from flask import jsonify, request
 from app.services.document_service import DocumentService
-
-UPLOAD_FOLDER = 'uploads/'
 
 class DocumentController:
     def __init__(self):
@@ -17,16 +14,11 @@ class DocumentController:
 
         name = data.get("name")
         description = data.get("description")
+        path = self.document_service.upload_file(file, name)
+        folder_id = data.get("folder_id")
 
         if not name:
             return jsonify({"erro": "O nome é obrigatório!"}), 400
-        
-        _, extension = os.path.splitext(file.filename)
-        filename = f"{name.replace(' ', '_')}{extension}"
-        path = os.path.join(UPLOAD_FOLDER, filename)
-        folder_id = data.get("folder_id")
-
-        file.save(path)
 
         new_document = self.document_service.create_document(name, description, folder_id, path)
 
@@ -53,12 +45,14 @@ class DocumentController:
 
         name = data.get("name")
         description = data.get("description")
-        path = data.get("path")
         extracted_data = data.get("extracted_data")
         modified_data = data.get("modified_data")
         folder_id = data.get("folder_id")
 
-        updated_document = self.document_service.update_document(document_id, name, description, path, extracted_data, modified_data, folder_id)
+        if 'file' in request.files:
+            file = request.files['file']
+
+        updated_document = self.document_service.update_document(document_id, name, description, extracted_data, modified_data, folder_id, file)
 
         if updated_document:
             return jsonify({
