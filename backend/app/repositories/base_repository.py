@@ -12,6 +12,10 @@ class BaseRepository:
         return self.model.query.get(entity_id)
     
     def update(self, entity):
+        db.session.merge(entity)
+        db.session.commit()
+
+    def delete(self, entity):
         db.session.delete(entity)
         db.session.commit()
 
