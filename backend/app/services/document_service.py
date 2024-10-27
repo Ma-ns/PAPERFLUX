@@ -56,7 +56,7 @@ class DocumentService:
         if modified:
             document.modified_at = datetime.now(timezone.utc)
 
-        self.document_repo.update()
+        self.document_repo.update(document)
 
         return document
     
@@ -68,6 +68,3 @@ class DocumentService:
             return True
         
         return False
-        
-
-

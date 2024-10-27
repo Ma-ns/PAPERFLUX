@@ -36,7 +36,7 @@ class DocumentController:
             }), 201
 
     def get_document(self, document_id):
-        document = self.document_service.get(document_id)
+        document = self.document_service.get_document(document_id)
 
         if document:
             return jsonify(document.to_dict())
@@ -44,20 +44,21 @@ class DocumentController:
         return jsonify({"message": "Documento não encontrado."}), 404
 
     def update_document(self, document_id):
-        document = self.document_repo.get(document_id)
+        document = self.document_service.get_document(document_id)
 
         if not document:
             return jsonify({"message": "Documento não encontrado"}), 404
         
-        data = request.get_json()
+        data = request.form
 
-        name = data.get("name", name)
-        description = data.get("description", description)
-        path = data.get("path", path)
-        extracted_data = data.get("extracted_data", extracted_data)
-        folder_id = data.get("folder_id", folder_id)
+        name = data.get("name")
+        description = data.get("description")
+        path = data.get("path")
+        extracted_data = data.get("extracted_data")
+        modified_data = data.get("modified_data")
+        folder_id = data.get("folder_id")
 
-        updated_document = self.document_service.update_document(name, description, path, extracted_data, folder_id)
+        updated_document = self.document_service.update_document(document_id, name, description, path, extracted_data, modified_data, folder_id)
 
         if updated_document:
             return jsonify({
