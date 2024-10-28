@@ -10,7 +10,7 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     profile_pic_path = db.Column(db.String(200), nullable=True)
 
-    # permissions = db.relationship('Permission', back_populates='user')
+    permissions = db.relationship('Permission', back_populates='user')
 
     def to_dict(self):
         return{

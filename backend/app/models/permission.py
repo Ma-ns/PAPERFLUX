@@ -4,8 +4,8 @@ class Permission(db.Model):
     __tablename__ = 'tb_ppf_permission'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    folder_id = db.Column(db.Integer, db.ForeignKey('folders.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_user.id'), nullable=False)
+    folder_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_folder.id'), nullable=False)
 
     user = db.relationship('User', back_populates='permissions')
     folder = db.relationship('Folder')
