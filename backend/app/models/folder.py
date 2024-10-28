@@ -6,6 +6,7 @@ class Folder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
+    private = db.Column(db.Boolean, default=False)
 
     documentos = db.relationship('Document', backref = 'Folder', lazy=True)
 

@@ -19,8 +19,12 @@ routes.route('/folder/<int:folder_id>', methods=['DELETE'])(folder_controller.de
 # Rotas para Documento
 routes.route('/document', methods=['POST'])(document_controller.create_document)
 routes.route('/document/<int:document_id>', methods=['GET'])(document_controller.get_document)
-routes.route('/document/<int:document_id>', methods=['PUT'])(document_controller.update_document)
+
 routes.route('/document/<int:document_id>', methods=['DELETE'])(document_controller.delete_document)
 
 # Rotas para Usuário
 routes.route('/user', methods=['POST'])(user_controller.create_user)
+routes.route('/user/<int:user_id>', methods=['GET'])(user_controller.get_user)
+routes.route('/user/<int:user_id>', methods=['PUT'])(user_controller.update_user)
+routes.route('/user/<int:user_id>/profile_pic', methods=['PUT'])(user_controller.update_profilePic)
+routes.route('/user/<int:user_id>', methods=['DELETE'])(user_controller.delete_user)
