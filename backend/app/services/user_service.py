@@ -71,3 +71,10 @@ class UserService:
         
         return False
 
+    def validate_login(self, email, password):
+        user = self.user_repo.get_user_by_email(email)
+
+        if check_password_hash(user.password_hash, password):
+            return user
+        
+        return None

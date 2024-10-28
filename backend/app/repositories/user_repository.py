@@ -8,3 +8,6 @@ class UserRepository(BaseRepository):
 
     def email_exists(self, email):
         return db.session.query(User).filter_by(email=email).first()
+    
+    def get_user_by_email(self, email):
+        return User.query.filter_by(email=email).first()

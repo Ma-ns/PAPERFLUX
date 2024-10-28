@@ -83,4 +83,18 @@ class UserController:
         if response:
             return jsonify({"message": "Usuário excluído com sucesso"}), 200
         return jsonify({"message": "Usuário não encontrado"}), 404
+    
+    def validate_login(self):
+        data = request.get_json()
 
+        email = data.get('email')
+        password = data.get('password')
+        
+        user = self.user_service.validate_login(email, password)
+
+        if user:
+            return jsonify({
+                "message": "Usuário logado com sucesso!",
+                "user": user.to_dict()
+            })
+        return jsonify({"message": "Usuário inválido"})
