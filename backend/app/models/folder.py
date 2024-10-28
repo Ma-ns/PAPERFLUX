@@ -14,7 +14,8 @@ class Folder(db.Model):
         return{
             "id": self.id,
             "name": self.name,
-            "description": self.description
+            "description": self.description,
+            "private": self.private
         }
 
 def __repr__(self):
