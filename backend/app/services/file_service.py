@@ -26,4 +26,5 @@ class FileService:
 
         return path
     
-    # adicionar delete file
+    def delete_file(self, path):
+        os.remove(path)
