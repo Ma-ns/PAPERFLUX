@@ -23,11 +23,12 @@ class DocumentController:
         extension = extension
         path = self.file_service.upload_file(file, name, UPLOAD_FOLDER)
         folder_id = data.get("folder_id")
+        page_count = data.get("page_count")
 
         if not name:
             return jsonify({"erro": "O nome é obrigatório!"}), 400
 
-        new_document = self.document_service.create_document(name, description, extension, folder_id, path)
+        new_document = self.document_service.create_document(name, description, extension, folder_id, path, page_count)
 
         return jsonify({
             "message": "Documento criado com sucesso!",
@@ -55,6 +56,7 @@ class DocumentController:
         extracted_data = data.get("extracted_data")
         modified_data = data.get("modified_data")
         folder_id = data.get("folder_id")
+        page_count = data.get("page_count")
 
         if 'file' in request.files:
             file = request.files['file']
@@ -62,7 +64,16 @@ class DocumentController:
 
             extension = extension
 
-        updated_document = self.document_service.update_document(document_id, name, description, extension, extracted_data, modified_data, folder_id, file)
+        updated_document = self.document_service.update_document(
+            document_id, 
+            name, 
+            description, 
+            extension, 
+            extracted_data, 
+            modified_data, 
+            folder_id, 
+            file,
+            page_count)
 
         if updated_document:
             return jsonify({

@@ -12,7 +12,7 @@ class UserService:
         self.user_repo = UserRepository()
         self.file_service = FileService()
 
-    def create_user(self, name, email, password, is_admin, file):
+    def create_user(self, name, email, password, is_admin, file, role_id):
         path = self.file_service.upload_file(file, name,PROFILE_PICTURE_FOLDER)
 
         if self.user_repo.email_exists(email):
@@ -25,7 +25,8 @@ class UserService:
             email = email, 
             password_hash = hashed_password, 
             is_admin = is_admin, 
-            profile_pic_path = path)
+            profile_pic_path = path,
+            role_id = role_id)
 
         self.user_repo.add(new_user) 
 

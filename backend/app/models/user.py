@@ -10,6 +10,9 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     profile_pic_path = db.Column(db.String(200), nullable=True)
 
+    role_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_role.id'), nullable=True)
+    role = db.relationship('Role', back_populates='users')
+
     permissions = db.relationship('Permission', back_populates='user')
 
     def to_dict(self):

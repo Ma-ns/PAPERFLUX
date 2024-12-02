@@ -3,11 +3,13 @@ from app.controllers.folder_controller import FolderController
 from app.controllers.document_controller import DocumentController
 from app.controllers.user_controller import UserController
 from app.controllers.permission_controller import PermissionController
+from app.controllers.role_controller import RoleController
 
 folder_controller = FolderController()
 document_controller = DocumentController()
 user_controller = UserController()
 permission_controller = PermissionController()
+role_controller = RoleController()
 
 routes = Blueprint('routes', __name__)
 
@@ -35,3 +37,10 @@ routes.route('/user/validate_login', methods=['GET'])(user_controller.validate_l
 # Rotas para Permissão
 routes.route('/permission', methods=['POST'])(permission_controller.assign_permission)
 routes.route('/permission', methods=['DELETE'])(permission_controller.undesignate_permission)
+
+#Rotas para Cargo
+routes.route('/role', methods=['POST'])(role_controller.create_role)
+routes.route('/role/<int:role_id>', methods=['GET'])(role_controller.get_role)
+routes.route('/role/<int:role_id>', methods=['PUT'])(role_controller.update_role)
+routes.route('/role/<int:role_id>', methods=['DELETE'])(role_controller.delete_role)
+routes.route('/role/<int:role_id>/users', methods=['GET'])(role_controller.get_users_by_role)

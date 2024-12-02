@@ -9,6 +9,7 @@ class Document(db.Model):
     extension = db.Column(db.String(50), nullable=False)
     path = db.Column(db.String(200), nullable=True)
     extracted_data = db.Column(db.JSON, nullable=True)
+    page_count = db.Column(db.Integer, default=1)
     modified_data = db.Column(db.JSON, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     modified_at = db.Column(db.DateTime, nullable=True)
@@ -23,6 +24,7 @@ class Document(db.Model):
             "extension": self.extension,
             "path": self.path,
             "extracted_data": self.extracted_data,
+            "page_count": self.page_count,
             "modified_data": self.modified_data,
             "created_at": self.created_at,
             "modified_at": self.modified_at,

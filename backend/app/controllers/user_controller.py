@@ -19,12 +19,13 @@ class UserController:
         email = data.get("email")
         password = data.get("password")
         is_admin = data.get("is_admin")
+        role_id = data.get("role_id")
 
         if not name or not email or not password:
             return jsonify({"error": "Os Campos de nome, email e senha são obrigatórios"})
 
         try:
-            new_user = self.user_service.create_user(name, email, password, is_admin, file)
+            new_user = self.user_service.create_user(name, email, password, is_admin, file, role_id)
             return jsonify({
             "message": "Usuário criado com sucesso!",
             "user": new_user.to_dict()

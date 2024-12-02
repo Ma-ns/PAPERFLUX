@@ -11,13 +11,14 @@ class DocumentService:
         self.document_repo = DocumentRepository()
         self.file_service = FileService()
 
-    def create_document(self, name, description,extension, folder_id, path):
+    def create_document(self, name, description,extension, folder_id, path, page_count):
         new_document = Document(
             name = name, 
             description = description, 
             extension = extension, 
             folder_id = folder_id, 
-            path = path)
+            path = path,
+            page_count = page_count)
 
         self.document_repo.add(new_document)
 
@@ -35,7 +36,8 @@ class DocumentService:
             extracted_data = None,
             modified_data = None,
             folder_id = None,
-            file = None
+            file = None,
+            page_count = None
             ):
         
         document = self.document_repo.get(document_id)
@@ -66,6 +68,8 @@ class DocumentService:
             modified = True
         if folder_id:
             document.folder_id = folder_id
+        if page_count:
+            document.page_count = page_count
 
         if modified:
             document.modified_at = datetime.now(timezone.utc)
