@@ -13,6 +13,7 @@ class Document(db.Model):
     modified_data = db.Column(db.JSON, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     modified_at = db.Column(db.DateTime, nullable=True)
+    consults = db.Column(db.Integer, default=0)
     
     folder_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_folder.id'), nullable=True)
 
