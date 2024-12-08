@@ -1,38 +1,49 @@
-from repositories.document_repository import DocumentRepository
+from app.models.analysis import Analysis
+from app.repositories.analysis_repository import AnalisysRepository
 
 class AnalysisService:
-    @staticmethod
-    def get_analysis_data():
-        sustainability_data = SustainabilityRepository.fetch_data()
-        warm_data = WarmRepository.fetch_data()
-        carbon_data = CarbonRepository.fetch_data(1000)
+    def __init__(self):
+        self.repository = AnalisysRepository()
 
-        df_sustainability = pd.DataFrame(sustainability_data["data"])
-        df_warm = pd.DataFrame(warm_data["results"])
-        df_carbon = pd.DataFrame(carbon_data)
+    def create_analysis(self, digitalized_documents, generated_residues, consult_economy, paper_use_by_role):
+        new_analysis = Analysis(
+            digitalized_documents = digitalized_documents,
+            generated_residues = generated_residues,
+            consult_economy = consult_economy,
+            paper_use_by_role = paper_use_by_role
+        )
 
-        df_combined = pd.concat([df_sustainability, df_warm, df_carbon], axis=1)
-        return df_combined
+        return self.repository.add(new_analysis)
     
-    def calculate_printing_cost(self, total_pages, cost_per_page):
-        total_cost = total_pages * cost_per_page
-        return total_cost
+    def get_analysis(self, id):
+        return self.repository.get(id)
     
-    def calculate_weight_in_grams(self, total_pages, weight_per_page):
-        total_weight = total_pages * weight_per_page
-        return total_weight
+    def get_all_analysis(self):
+        return self.repository.get_all()
     
-    @staticmethod
-    def get_summaryPannel_data():
-        total_pages = DocumentRepository.get_total_pages()
+    def update_analysis(
+            self, 
+            id, 
+            digitalized_documents = None,
+            generated_residues = None,
+            consult_economy = None,
+            paper_use_by_role = None
+        ):
 
-        printing_economy = AnalysisService.calculate_printing_cost(total_pages, 1.5)
-        total_weight = AnalysisService.calculate_weight_in_grams(total_pages, 50)
+        analysis = self.repository.get(id)
 
-        return {
-            "total_pages": total_pages,
-            "printing_economy": printing_economy,
-            "total_weight": total_weight
-        }
+        if digitalized_documents:
+            analysis.digitalized_documents = digitalized_documents
+        if generated_residues:
+            analysis.generated_residues = generated_residues
+        if consult_economy:
+            analysis.consult_economy = consult_economy
+        if paper_use_by_role:
+            analysis.paper_use_by_role = paper_use_by_role
+        
+        return self.repository.update(id, analysis)
+    
+    def delete_analysis(self, id):
+        return self.repository.delete(id)
     
     

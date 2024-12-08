@@ -6,20 +6,17 @@ class Analysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     digitalized_documents = db.Column(db.Integer, default=0)
     generated_residues = db.Column(db.Integer, default=0)
+    consult_economy = db.Column(db.String(200), nullable=True)
+    paper_use_by_role = db.Column(db.JSON, nullable=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     def to_dict(self):
         return{
-            "document_id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "extension": self.extension,
-            "path": self.path,
-            "extracted_data": self.extracted_data,
-            "page_count": self.page_count,
-            "modified_data": self.modified_data,
-            "created_at": self.created_at,
-            "modified_at": self.modified_at,
-            "folder_id": self.folder_id
+            'id': self.id,
+            'digitalized_documents': self.digitalized_documents,
+            'generated_residues': self.generated_residues,
+            'consult_economy': self.consult_economy,
+            'paper_use_by_role': self.paper_use_by_role
         }
 
 def __repr__(self):
