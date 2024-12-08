@@ -1,7 +1,4 @@
 from repositories.document_repository import DocumentRepository
-from repositories.sustainability_repository import SustainabilityRepository
-from repositories.warm_repository import WarmRepository
-from repositories.carbon_repository import CarbonRepository
 
 class AnalysisService:
     @staticmethod

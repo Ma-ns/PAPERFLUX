@@ -4,12 +4,14 @@ from app.controllers.document_controller import DocumentController
 from app.controllers.user_controller import UserController
 from app.controllers.permission_controller import PermissionController
 from app.controllers.role_controller import RoleController
+from app.controllers.analysis_controller import AnalysisController
 
 folder_controller = FolderController()
 document_controller = DocumentController()
 user_controller = UserController()
 permission_controller = PermissionController()
 role_controller = RoleController()
+analysis_controller = AnalysisController()
 
 routes = Blueprint('routes', __name__)
 
@@ -44,3 +46,9 @@ routes.route('/role/<int:role_id>', methods=['GET'])(role_controller.get_role)
 routes.route('/role/<int:role_id>', methods=['PUT'])(role_controller.update_role)
 routes.route('/role/<int:role_id>', methods=['DELETE'])(role_controller.delete_role)
 routes.route('/role/<int:role_id>/users', methods=['GET'])(role_controller.get_users_by_role)
+
+# Rotas para Análise
+routes.route('/analysis', methods=['POST'])(analysis_controller.create_analysis)
+routes.route('/analysis/<int:analysis_id>', methods=['GET'])(analysis_controller.get_analysis)
+routes.route('/analysis/<int:analysis_id>', methods=['PUT'])(analysis_controller.update_analysis)
+routes.route('/analysis/<int:analysis_id>', methods=['DELETE'])(analysis_controller.delete_analysis)
