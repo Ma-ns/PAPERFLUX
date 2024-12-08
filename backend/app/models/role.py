@@ -12,7 +12,6 @@ class Role(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description
         }
 
     def __repr__(self):

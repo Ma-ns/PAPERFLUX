@@ -30,25 +30,6 @@ class RoleController:
         
         return jsonify({"message": "Cargo não encontrado."}), 404
 
-    def update_role(self, role_id):
-        role = self.role_service.get_role(role_id)
-
-        if not role:
-            return jsonify({"message": "Cargo não encontrado"})
-
-        data = request.get_json()
-
-        name = data.get("name")
-
-        updated_role = self.role_service.update_role(role_id, name)
-        
-        if updated_role:
-            return jsonify({
-                "message": "Cargo atualizado com sucesso!",
-                "role": updated_role.to_dict()
-            })
-        return jsonify({"message": "Não foi possível atualizar o cargo"}), 400
-
     def delete_role(self, role_id):
         response = self.role_service.delete_role(role_id)
 

@@ -46,7 +46,6 @@ routes.route('/permission', methods=['DELETE'])(permission_controller.undesignat
 #Rotas para Cargo
 routes.route('/role', methods=['POST'])(role_controller.create_role)
 routes.route('/role/<int:role_id>', methods=['GET'])(role_controller.get_role)
-routes.route('/role/<int:role_id>', methods=['PUT'])(role_controller.update_role)
 routes.route('/role/<int:role_id>', methods=['DELETE'])(role_controller.delete_role)
 routes.route('/role/<int:role_id>/users', methods=['GET'])(role_controller.get_users_by_role)
 
