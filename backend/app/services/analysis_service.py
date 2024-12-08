@@ -1,9 +1,13 @@
 from app.models.analysis import Analysis
 from app.repositories.analysis_repository import AnalisysRepository
+from app.repositories.document_repository import DocumentRepository
+import pandas as pd
+import numpy as np
 
 class AnalysisService:
     def __init__(self):
         self.repository = AnalisysRepository()
+        self.document_repository = DocumentRepository()
 
     def create_analysis(self, digitalized_documents, generated_residues, consult_economy, paper_use_by_role):
         new_analysis = Analysis(
@@ -16,7 +20,19 @@ class AnalysisService:
         return self.repository.add(new_analysis)
     
     def get_analysis(self, id):
-        return self.repository.get(id)
+        analysis_data = self.repository.get_all()
+        documents_data = self.document_repository.get_all()
+
+        data = [analysis.to_dict() for analysis in analysis_data]
+        df = pd.DataFrame(data)
+
+        if documents_data:
+            page_counts = [document['page_count'] for document in documents_data if 'page_count' in document]
+            avg_page_count = np.mean(page_counts) if page_counts else 0
+
+        df['avg_page_count'] = avg_page_count
+
+        return df.to_dict(orient='records')
     
     def get_all_analysis(self):
         return self.repository.get_all()

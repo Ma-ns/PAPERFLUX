@@ -2,6 +2,7 @@ Flask
 Flask-SQLAlchemy
 PyMySQL
 Werkzeug
-Pandas
+pandas
 Plotly
 Dash
+numpy

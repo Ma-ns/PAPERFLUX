@@ -1,5 +1,4 @@
 "use client"
-import page from '@/app/Relatorios/page';
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
