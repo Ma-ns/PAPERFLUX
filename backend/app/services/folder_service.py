@@ -15,6 +15,9 @@ class FolderService:
     
     def get_folder(self, folder_id):
         return self.folder_repo.get(folder_id)
+    
+    def get_all_folders(self):
+        return self.folder_repo.get_all()
 
     def update_folder(self, folder_id, name = None, description = None):
         folder = self.folder_repo.get(folder_id)

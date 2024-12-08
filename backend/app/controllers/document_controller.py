@@ -42,6 +42,14 @@ class DocumentController:
             return jsonify(document.to_dict())
         
         return jsonify({"message": "Documento não encontrado."}), 404
+    
+    def get_all_document(self):
+        documents = self.document_service.get_all_documents()
+
+        if documents:
+            return jsonify([document.to_dict() for document in documents])
+        
+        return jsonify({"message": "Nenhum documento encontrado"}), 404
 
     def update_document(self, document_id):
         document = self.document_service.get_document(document_id)

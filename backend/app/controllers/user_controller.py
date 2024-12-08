@@ -41,6 +41,14 @@ class UserController:
         
         return jsonify({"message": "Pasta não encontrada."}), 404
     
+    def get_all_users(self):
+        users = self.user_service.get_all_users()
+
+        if users:
+            return jsonify([user.to_dict() for user in users])
+        
+        return jsonify({"message": "Nenhum usuário encontrado."}), 404
+    
     def update_user(self, user_id):
         user = self.user_service.get_user(user_id)
 

@@ -27,6 +27,9 @@ class DocumentService:
     def get_document(self, document_id):
         return self.document_repo.get(document_id)
     
+    def get_all_documents(self):
+        return self.document_repo.get_all()
+    
     def update_document(
             self, 
             document_id, 

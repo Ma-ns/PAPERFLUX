@@ -1,6 +1,62 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
+
+export interface FolderI {
+  id: number
+  name: string
+  description: string
+  private: string
+}
+
+export interface DocumentI{
+  created_at: string
+  description: string
+  document_id: number
+  extension: string
+  extracted_data: JSON
+  folder_id: number
+  modified_at: string
+  modified_data: string
+  name: string
+  page_count: number
+  path: string
+}
 
 const page:React.FC = () => {
+  const [folders, setFolders] = React.useState<FolderI[]>([])
+  const [documents, setDocuments] = React.useState<DocumentI[]>([])
+
+  const fetchFolder = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/folder/all', {method: 'GET'})
+      const data = await response.json();
+
+      setFolders(data.folders)
+
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const fetchDocuments = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/document/all', {method: 'GET'})
+      const data = await response.json();
+
+      setDocuments(data)
+
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchFolder()
+    fetchDocuments()
+  },[])
+console.log(documents)
   return (
     <section className='size-full flex flex-col items-start justify-between gap-y-4'>
       {/* REGISTER CARD */}
@@ -61,31 +117,37 @@ const page:React.FC = () => {
         <div className='size-full my-4 pb-2 overflow-y-auto overflow-x-hidden '>
           <div className='h-fit w-full pr-2'>
             <h3 className='text-sm font-bold text-slate-800/60 mb-2'>Pastas</h3>
-            <div className='w-full h-fit flex items-center justify-start'>
-              {/* MAP AQUI */}
-              <button className='h-fit w-[12rem] py-3 px-4 group/folder bg-purple-800/10 hover:bg-purple-800/15 transition-all rounded-lg flex items-center justify-start gap-x-2'>
-                <div className='size-fit'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="24" viewBox="0 0 30 24" fill="none" className='size-6 fill-purple-800 group-hover/folder:fill-purple-900 transition-all'>
-                    <path d="M12 0H3C1.35 0 0.015 1.35 0.015 3L0 21C0 22.65 1.35 24 3 24H27C28.65 24 30 22.65 30 21V6C30 4.35 28.65 3 27 3H15L12 0Z" fillOpacity="0.6"/>
-                  </svg>
-                </div>
-                <div className='w-full text-base font-medium text-slate-800/80 group-hover/folder:text-slate-800/90 transition-all'>
-                  Nome da Pasta
-                </div>
-              </button>
+            <div className='w-full h-fit flex items-center justify-start gap-x-4'>
+              {folders.map((folder, folderIndex) => (
+                <button key={folderIndex} className='h-fit w-[12rem] py-3 px-4 group/folder bg-purple-800/10 hover:bg-purple-800/15 transition-all rounded-lg flex items-center justify-start gap-x-2'>
+                  <div className='size-fit'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="24" viewBox="0 0 30 24" fill="none" className='size-6 fill-purple-800 group-hover/folder:fill-purple-900 transition-all'>
+                      <path d="M12 0H3C1.35 0 0.015 1.35 0.015 3L0 21C0 22.65 1.35 24 3 24H27C28.65 24 30 22.65 30 21V6C30 4.35 28.65 3 27 3H15L12 0Z" fillOpacity="0.6"/>
+                    </svg>
+                  </div>
+                  <div className='w-full text-base font-medium text-slate-800/80 group-hover/folder:text-slate-800/90 transition-all'>
+                    {folder.name}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
           <div className='h-full w-full py-4 pr-2'>
             <h3 className='text-sm font-bold text-slate-800/60'>Documentos</h3>
-            <div className='w-full h-full'>
-              <div className='w-[16rem] h-[10rem] bg-pink-500 rounded-lg'>
-                <div>
-
-                </div>
-                <div>
-                  
-                </div>
-              </div>
+            <div className='w-full h-full flex items-start justify-start flex-wrap gap-2'>
+              {documents.map((document, documentIndex) => (
+                <button key={documentIndex} 
+                className='px-2 py-2 flex flex-col grow max-w-[16rem] h-[12rem] border-solid border-[2px] border-purple-800/15 rounded-lg group
+                hover:bg-purple-800/3 hover:border-purple-800/30 transition-all'>
+                  <div className='w-full h-[60%]'>
+                    <img src={`${document.path}`} alt="" className='object-cover object-center size-full rounded-lg'></img>
+                  </div>
+                  <div className='w-full h-[40%] px-1'>
+                    <h4 className='mt-2 text-left text-base font-medium text-slate-800/80 group-hover:text-slate-800 transition-all'>{document.name}</h4>
+                    <p className='text-xs text-left text-slate-800/60 group-hover:text-slate-800/80 transition-all line-clamp-2 text-ellipsis'>{document.description}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>

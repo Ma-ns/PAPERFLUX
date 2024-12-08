@@ -35,6 +35,9 @@ class UserService:
     def get_user(self, user_id):
         return self.user_repo.get(user_id)
     
+    def get_all_users(self):
+        return self.user_repo.get_all()
+    
     def update_user(self, user_id, 
                     name = None, 
                     email = None, 

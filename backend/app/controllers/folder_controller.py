@@ -28,6 +28,13 @@ class FolderController:
             return jsonify(folder.to_dict())
         
         return jsonify({"message": "Pasta não encontrada."}), 404
+    
+    def get_all_folders(self):
+        folders = self.folder_service.get_all_folders()
+
+        folders_data = [folder.to_dict() for folder in folders]
+
+        return jsonify({"folders": folders_data}), 200
 
     def update_folder(self, folder_id):
         folder = self.folder_service.get_folder(folder_id)
