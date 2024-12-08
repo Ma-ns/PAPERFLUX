@@ -66,6 +66,9 @@ class DocumentController:
         folder_id = data.get("folder_id")
         page_count = data.get("page_count")
 
+        extension = None
+        file = None
+        
         if 'file' in request.files:
             file = request.files['file']
             _, extension = os.path.splitext(file.filename)

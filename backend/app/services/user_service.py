@@ -13,7 +13,7 @@ class UserService:
         self.file_service = FileService()
 
     def create_user(self, name, email, password, is_admin, file, role_id):
-        path = self.file_service.upload_file(file, name,PROFILE_PICTURE_FOLDER)
+        path = self.file_service.upload_file(file, name, PROFILE_PICTURE_FOLDER)
 
         if self.user_repo.email_exists(email):
             raise ValueError("O e-mail já está em uso.")

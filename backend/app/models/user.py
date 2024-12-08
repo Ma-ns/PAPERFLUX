@@ -13,7 +13,7 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('tb_ppf_role.id'), nullable=True)
     role = db.relationship('Role', back_populates='users')
 
-    permissions = db.relationship('Permission', back_populates='user')
+    permissions = db.relationship('Permission', back_populates='user',  cascade="all, delete-orphan")
 
     def to_dict(self):
         return{
